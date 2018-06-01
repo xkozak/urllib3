@@ -184,6 +184,13 @@ class HTTPResponse(io.IOBase):
         if preload_content and not self._body:
             self._body = self.read(decode_content=decode_content)
 
+        # Keep the peer cert
+        try:
+            # Fetch the cert in DER
+            self.peercert = self._connection.sock.getpeercert(True)
+        except AttributeError:
+            pass
+
     def get_redirect_location(self):
         """
         Should we redirect and where to?
